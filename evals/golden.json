@@ -1,0 +1,74 @@
+[
+{
+	"id": "count_march",
+	"tags": ["basic", "dates"],
+	"question": "How many transactions were there in March 2019?",
+	"sql": "SELECT COUNT(*) FROM transactions WHERE date >= '2019-03-01' AND date < '2019-04-01'"
+},
+{
+	"id": "total_fraud",
+	"tags": ["basic", "labels"],
+	"question": "How many fraudulent transactions are there in total?",
+	"sql": "SELECT SUM(is_fraud) FROM fraud_labels"
+},
+{
+	"id": "big_tx_cents",
+	"tags": ["trap:cents"],
+	"question": "How many transactions were over $1,000?",
+	"sql": "SELECT COUNT(*) FROM transactions WHERE amount_usd_cents > 100000"
+},
+{
+	"id": "fraud_rate_by_type",
+	"tags": ["join", "trap:labelled-only"],
+	"question": "What is the fraud rate for each transaction type?",
+	"sql": "SELECT t.transaction_type, AVG(f.is_fraud) FROM transactions t JOIN fraud_labels f ON f.transaction_id = t.id GROUP BY 1"
+},
+{
+	"id": "fraud_rate_by_card_type",
+	"tags": ["join", "trap:labelled-only"],
+	"question": "Fraud rate by card type",
+	"sql": "SELECT c.card_type, AVG(f.is_fraud) FROM transactions t JOIN fraud_labels f ON f.transaction_id = t.id JOIN cards c ON c.id = t.card_id GROUP BY 1"
+},
+{
+	"id": "fraud_by_error",
+	"tags": ["join", "nulls"],
+	"question": "How many fraudulent transactions had each type of error? Exclude transactions without an error.",
+	"sql": "SELECT t.errors, SUM(f.is_fraud) FROM transactions t JOIN fraud_labels f ON f.transaction_id = t.id WHERE t.errors IS NOT NULL GROUP BY 1"
+},
+{
+	"id": "top_states_fraud",
+	"tags": ["join", "geo"],
+	"question": "Which 5 merchant states have the most fraudulent transactions?",
+	"sql": "SELECT ml.state, SUM(f.is_fraud) AS n FROM transactions t JOIN fraud_labels f ON f.transaction_id = t.id JOIN merchant_locations ml ON ml.id = t.merchant_location_id GROUP BY 1 ORDER BY n DESC LIMIT 5"
+},
+{
+	"id": "avg_fraud_amount",
+	"tags": ["trap:cents", "join"],
+	"question": "What is the average amount in dollars of fraudulent transactions?",
+	"sql": "SELECT AVG(t.amount_usd_cents) / 100.0 FROM transactions t JOIN fraud_labels f ON f.transaction_id = t.id WHERE f.is_fraud = 1"
+},
+{
+	"id": "fraud_by_hour",
+	"tags": ["dates", "join"],
+	"question": "How many fraudulent transactions happened in each hour of the day?",
+	"sql": "SELECT CAST(strftime('%H', t.date) AS INTEGER), SUM(f.is_fraud) FROM transactions t JOIN fraud_labels f ON f.transaction_id = t.id GROUP BY 1"
+},
+{
+	"id": "top_mcc_fraud_count",
+	"tags": ["multi-join"],
+	"question": "Which 3 merchant categories (by MCC description) have the most fraudulent transactions?",
+	"sql": "SELECT mc.description, SUM(f.is_fraud) AS n FROM transactions t JOIN fraud_labels f ON f.transaction_id = t.id JOIN merchants m ON m.id = t.merchant_id JOIN mcc_codes mc ON mc.mcc = m.mcc GROUP BY 1 ORDER BY n DESC LIMIT 3"
+},
+{
+	"id": "unanswerable_2023",
+	"tags": ["unanswerable"],
+	"question": "What was the fraud rate in 2023?",
+	"sql": null
+},
+{
+	"id": "unanswerable_device",
+	"tags": ["unanswerable"],
+	"question": "Which device fingerprints are linked to the most fraud?",
+	"sql": null
+}
+]

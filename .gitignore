@@ -1,0 +1,9 @@
+/fsm.db
+/__pycache__/
+/.env
+.venv/
+.env
+fsm.db
+__pycache__/
+.pytest_cache/
+evals/results.json
