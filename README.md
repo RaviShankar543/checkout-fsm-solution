@@ -30,7 +30,6 @@ A proof of concept that helps a Fraud Success Manager (FSM) go from **question �
 ### Option A: uv (recommended)
 
 ```javascript
-cd fsm-assistant
 uv sync                                   # creates .venv from pyproject.toml
 cp .env.example .env                      # then set ANTHROPIC_API_KEY
 uv run python prepare_db.py               # one-off, ~20s: builds fsm.db (see ADR-004)
@@ -40,7 +39,6 @@ uv run streamlit run app.py               # opens http://localhost:8501
 ### Option B: plain pip
 
 ```javascript
-cd fsm-assistant
 python -m venv .venv
 # Windows: .venv\Scripts\activate    macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
@@ -348,7 +346,7 @@ explore → hypothesis → propose rule (LLM) → validate + backtest (SQL) → 
 ## 12. Project layout
 
 ```javascript
-fsm-assistant/
+checkout-fsm-solution/
 ├── app.py              # Streamlit UI (Explore + Propose rule)
 ├── assistant.py        # Prompt, Claude calls, self-repair loop, rule proposal
 ├── db.py               # Read-only execution, authorizer guardrails, backtest metrics

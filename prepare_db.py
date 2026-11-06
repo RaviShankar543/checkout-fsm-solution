@@ -4,7 +4,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
-SRC = Path(__file__).parent.parent / "data" / "data.db"
+SRC = Path(__file__).parent / "data" / "data.db"
 DST = Path(__file__).parent / "fsm.db"
 
 if DST.exists() and "--force" not in sys.argv:
